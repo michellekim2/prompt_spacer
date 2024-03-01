@@ -10,7 +10,7 @@ def main():
     caps5_var_template_path = '/Users/michellekim/Documents/Emory_NLP/var_templates/CAPS5_var_template.json'
     with open(empty_task_template_path, 'r') as file: # open template task json
         task_template = json.load(file)
-    print(task_template)
+    #print(task_template)
 
     with open(caps5_var_template_path, 'r') as file: # get information from CAPS5_var_template.json
         caps5_var_template = json.load(file)
@@ -18,10 +18,10 @@ def main():
     var_name = next(iter(caps5_var_template)) # get variable name
     var_info = caps5_var_template[var_name] # get information on a variable based on the name
 
-    print(f"Variable Name: {var_name}, Variable Information: {var_info}")
+    #print(f"Variable Name: {var_name}, Variable Information: {var_info}")
 
     task_template["Definition"] = form_sys_prompt(var_info)
-    print(task_template["Definition"])
+    print("form_sys_prompt_test: ", task_template["Definition"])
 
     """
     for key in var_info.keys():
@@ -47,16 +47,15 @@ def main():
     """
     # print(f'task_template["Definition"]: {task_template["Definition"]}, var_info["template"]: {var_info["template"]}')
 
-    # Writing to a new JSON file
     base_file_path = '/Users/michellekim/Documents/Emory_NLP/natural-instructions/tasks/'
-    new_file_path = f'{base_file_path}CAPS_task_test_{var_name}.json'
+    new_file_path = f'{base_file_path}CAPS_task_test.json'
 
     with open(new_file_path, 'w') as file:
         json.dump(task_template, file, indent=4)
 
-    print("task_template['Definition']: ", task_template["Definition"])
+    #print("task_template['Definition']: ", task_template["Definition"])
 
-def form_range(range_dict, fieldtype):
+def form_range(range_dict, field_type):
     range_str = "[" + ", ".join([k for k, _ in range_dict.items()]) + "]"
     range_example = "\n".join([f"{k}: {v}" for k, v in range_dict.items()])
     if field_type == "scale":
@@ -75,7 +74,7 @@ def get_fileds(string) -> list:
     return re.findall(r"\{(.+?)\}", string)
 
 def form_sys_prompt(var_template):
-    print("var_template: ", var_template["template"])
+    #print("var_template: ", var_template["template"])
     pstring = var_template["template"]["system"]
     fields = get_fileds(pstring)
     for field in fields:
@@ -108,7 +107,6 @@ def form_sys_prompt(var_template):
             'Return the answer as a JSON object with "reason" and "answer" as the keys.',
             'Return the answer as a JSON object in the following format: {"reason": "", "answer": ""}. Please ensure you only output the JSON object.',
         )
-        return pstring
     return pstring
 
 
@@ -120,10 +118,6 @@ def form_sys_prompt(var_template):
     #new_file_path = f'/Users/michellekim/Documents/Emory_NLP/natural-instructions/tasks/CAPS_task_test{variable}.json'
 
 
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     main()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
